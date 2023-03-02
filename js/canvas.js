@@ -1,4 +1,5 @@
 import { Pellet } from './Pellet.js'
+import { PowerUp } from './PowerUp.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -47,6 +48,7 @@ const MAP = [
   ['4', '-', '-', '-', '-', '-', '-', '-', '-', '-', '3']
 ]
 
+const powerUps = []
 
 function createImage(src) {
   const image = new Image()
@@ -236,9 +238,19 @@ MAP.forEach((row, i) => {
           })
         )
         break
+      case 'p':
+        powerUps.push(
+          new PowerUp({
+            position: {
+              x: j * Boundary.width + Boundary.width / 2,
+              y: i * Boundary.height + Boundary.height / 2
+            }
+          })
+        )
+        break
     }
   })
 })
 
 
-export { canvas, ctx, Boundary, boundaries, pellets }
+export { canvas, ctx, Boundary, boundaries, pellets, powerUps }
