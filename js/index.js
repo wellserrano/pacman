@@ -123,6 +123,11 @@ function animate() {
 
   }
 
+  if (player.velocity.x > 0) player.rotation = 0
+  else if (player.velocity.x < 0) player.rotation = Math.PI 
+  else if (player.velocity.y < 0) player.rotation = Math.PI *1.5
+  else if (player.velocity.y > 0) player.rotation = Math.PI /2
+
   //Walls rendering
   c.boundaries.forEach( boundary => {
     
@@ -191,6 +196,12 @@ function animate() {
     }
   }
   
+  //Winning condition
+  if (c.pellets.length -1 === 0) {
+    alert('You Win!')
+    cancelAnimationFrame(animationId)
+  }
+
   //Ghosts handling collision
   ghosts.forEach(ghost => {
     ghost.update()
@@ -262,13 +273,7 @@ function animate() {
     }
 
   })
-
-  //Winning condition
-  if (c.pellets.length -1 === 0) {
-    alert('You Win!')
-    cancelAnimationFrame(animationId)
-  }
-
+  
   player.update()
 
 }
