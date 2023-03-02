@@ -25,7 +25,15 @@ const ghosts = [
       y: c.Boundary.height + c.Boundary.height /2,
     },
     velocity: {x: 5, y: 0}
-  })
+  }),
+  new Ghost({
+    position: {    
+      x: c.Boundary.width *6 + c.Boundary.width /2,
+      y: c.Boundary.height *9 + c.Boundary.height /2,
+    },
+    velocity: {x: 5, y: 0},
+    color: 'pink'
+  }),
 ]
 
 function handleCollision({movingObject, blockadeObject}) {
@@ -127,7 +135,45 @@ function animate() {
     }
     
   })
+  for (let i = ghosts.length -1; 0 <= i; i--) {
+    const ghost = ghosts[i]
+    if (
+      Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) 
+      < ghost.radius + player.radius
+    ) {
+      if (ghost.scared) {
+        ghosts.splice(i, 1)
+        score += 250
+        scoreElement.innerHTML = score
+      } else {
+        cancelAnimationFrame(animationId)
+        alert('You lose!')
+      }
+    } 
+  }
 
+  //PowerUps rendering
+  for (let i = c.powerUps.length -1; 0 <= i; i--) {
+    const powerUp = c.powerUps[i];
+    powerUp.draw()    
+
+    if (
+        Math.hypot(powerUp.position.x - player.position.x, powerUp.position.y - player.position.y) 
+        < powerUp.radius + player.radius
+      ) {
+
+      c.powerUps.splice(i, 1)
+      score += 100
+      scoreElement.innerHTML = score
+
+      ghosts.forEach( ghost =>{
+        ghost.scared = true
+        setTimeout(() => { ghost.scared = false}, 6000)
+      })
+    }
+  }
+
+  //Pellets rendering
   for (let i = c.pellets.length -1; 0 < i; i--) {
     const pellet = c.pellets[i];
     pellet.draw()    
@@ -146,14 +192,6 @@ function animate() {
 
   ghosts.forEach(ghost => {
     ghost.update()
-
-    if (
-      Math.hypot(ghost.position.x - player.position.x, ghost.position.y - player.position.y) 
-      < ghost.radius + player.radius
-    ) {
-      cancelAnimationFrame(animationId)
-      alert('You lose!')
-    }
 
     const collisions = []
 
