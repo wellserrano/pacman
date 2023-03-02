@@ -123,18 +123,20 @@ function animate() {
 
   }
 
-
+  //Walls rendering
   c.boundaries.forEach( boundary => {
     
     boundary.draw()
 
-    //collision handling
+    //Player collision handling
     if ( handleCollision({ movingObject: player, blockadeObject: boundary })) {
       player.velocity.y = 0
       player.velocity.x = 0
     }
     
   })
+
+  //Ghosts contact
   for (let i = ghosts.length -1; 0 <= i; i--) {
     const ghost = ghosts[i]
     if (
@@ -185,14 +187,14 @@ function animate() {
       c.pellets.splice(i, 1)
       score += 10
       scoreElement.innerHTML = score
+
     }
   }
   
-  player.update()
-
+  //Ghosts handling collision
   ghosts.forEach(ghost => {
     ghost.update()
-
+    
     const collisions = []
 
     c.boundaries.forEach(boundary => {
@@ -260,6 +262,14 @@ function animate() {
     }
 
   })
+
+  //Winning condition
+  if (c.pellets.length -1 === 0) {
+    alert('You Win!')
+    cancelAnimationFrame(animationId)
+  }
+
+  player.update()
 
 }
 
